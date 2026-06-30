@@ -1,4 +1,5 @@
 const DEEPSEEK_URL = "https://api.deepseek.com/chat/completions";
+const DEEPSEEK_TIMEOUT_MS = 30_000;
 
 type Message = { role: "system" | "user"; content: string };
 
@@ -8,22 +9,36 @@ export async function deepseekComplete(messages: Message[]): Promise<string> {
   const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-pro";
   if (!apiKey) throw new Error("Missing DEEPSEEK_API_KEY");
 
-  const res = await fetch(DEEPSEEK_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      stream: false,
-      thinking: { type: "enabled" },
-      reasoning_effort: "high",
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DEEPSEEK_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch(DEEPSEEK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+        thinking: { type: "enabled" },
+        reasoning_effort: "high",
+        response_format: { type: "json_object" },
+        temperature: 0.7,
+      }),
+      signal: controller.signal,
+    });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new Error("DeepSeek request timed out");
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/db";
 import { RequireAuth } from "@/components/RequireAuth";
@@ -50,12 +50,15 @@ function Mission() {
   const today = todayISO();
   const rawDays = mission ? daysBetween(today, mission.dueDate) : 0;
   const fetching = useRef(false);
+  const [momentumRetry, setMomentumRetry] = useState(0);
 
   useEffect(() => {
     if (!mission || entries.length === 0) return;
     if (mission.momentumLineDate === today) return;
     if (fetching.current) return;
     fetching.current = true;
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
     const recent = [...entries]
       .reverse()
       .slice(0, 8)
@@ -79,12 +82,20 @@ function Mission() {
           })
         )
       )
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) {
+          retryTimer = setTimeout(() => setMomentumRetry((n) => n + 1), 10_000);
+        }
+      })
       .finally(() => {
         fetching.current = false;
       });
+    return () => {
+      cancelled = true;
+      if (retryTimer) clearTimeout(retryTimer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mission?.id, mission?.momentumLineDate, entries.length, today]);
+  }, [mission?.id, mission?.momentumLineDate, entries.length, today, momentumRetry]);
 
   if (q.isLoading || !user) {
     return (

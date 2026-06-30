@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { deepseekComplete, parseJSONLoose } from "@/lib/deepseek";
+import { requireInstantUser } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,6 +18,11 @@ Return only JSON: {"signal": string, "summary": string}. No commentary, no markd
 
 export async function POST(req: NextRequest) {
   try {
+    const authUser = await requireInstantUser(req);
+    if (!authUser) {
+      return Response.json({ error: "unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json().catch(() => null);
     const entryText = body?.entryText?.toString().trim();
     const missionTitle = body?.missionTitle?.toString().trim();

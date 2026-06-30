@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const EASE = [0.2, 0.65, 0.3, 1] as const;
@@ -17,6 +17,7 @@ export function Disclosure({
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const panelId = useId();
   const reduce = useReducedMotion();
 
   return (
@@ -25,6 +26,7 @@ export function Disclosure({
         type="button"
         className="disclosure-trigger"
         aria-expanded={open}
+        aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
       >
         <span className="label">
@@ -49,6 +51,7 @@ export function Disclosure({
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
+            id={panelId}
             className="disclosure-panel"
             initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={

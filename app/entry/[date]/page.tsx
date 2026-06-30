@@ -81,6 +81,7 @@ function EntryInner() {
             createdAt: Date.now(),
           })
           .link({ mission: mission.id, user: user.id }),
+        db.tx.missions[mission.id].update({ momentumLineDate: null }),
       ]);
     } catch (err: unknown) {
       setError(extractError(err) || "Could not save the entry.");
@@ -105,7 +106,6 @@ function EntryInner() {
           signal: res.signal,
           summary: res.summary,
         }),
-        db.tx.missions[mission.id].update({ momentumLineDate: null }),
       ]);
       setAi(res);
     } catch {

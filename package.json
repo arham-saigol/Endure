@@ -5,6 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "gen-icons": "node scripts/gen-icons.mjs",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },

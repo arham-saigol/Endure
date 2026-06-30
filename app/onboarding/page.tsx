@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { id } from "@instantdb/react";
 import { db } from "@/lib/db";
 import { RequireAuth } from "@/components/RequireAuth";
 import { Reveal } from "@/components/Reveal";
-import { todayISO } from "@/lib/dates";
+import { addDays, todayISO } from "@/lib/dates";
 
 export default function OnboardingPage() {
   return (
@@ -36,6 +35,7 @@ function Onboarding() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const today = todayISO();
+  const minDue = addDays(today, 1);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,7 +56,7 @@ function Onboarding() {
     if (!user) return;
     setBusy(true);
     try {
-      const mId = id();
+      const mId = user.id;
       const description = desc.trim();
       await db.transact(
         db.tx.missions[mId]
@@ -123,7 +123,7 @@ function Onboarding() {
                   id="d"
                   type="date"
                   className="input"
-                  min={today}
+                  min={minDue}
                   value={due}
                   onChange={(e) => setDue(e.target.value)}
                 />

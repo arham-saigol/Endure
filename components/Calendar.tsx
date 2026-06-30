@@ -8,18 +8,13 @@ import {
   formatLongDate,
   parseISODate,
   clamp,
+  todayISO,
 } from "@/lib/dates";
 
 type EntryLite = { date: string; signal?: string | null };
 
 function monthIndex(y: number, m: number) {
   return y * 12 + m;
-}
-
-function isoOf(d: Date) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    d.getDate()
-  ).padStart(2, "0")}`;
 }
 
 const EASE = [0.2, 0.65, 0.3, 1] as const;
@@ -41,7 +36,7 @@ export function Calendar({
     return m;
   }, [entries]);
 
-  const today = useMemo(() => isoOf(new Date()), []);
+  const today = useMemo(() => todayISO(), []);
 
   const minISO = createdAtISO && createdAtISO < today ? createdAtISO : today;
   const maxISO = dueISO < today ? today : dueISO;

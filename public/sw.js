@@ -23,6 +23,19 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function isCacheableAsset(req, url) {
+  return (
+    ["font", "image", "script", "style"].includes(req.destination) ||
+    url.pathname.startsWith("/_next/static/") ||
+    url.pathname.startsWith("/fonts/") ||
+    /\.(?:css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf)$/i.test(url.pathname)
+  );
+}
+
+function isCacheableResponse(res) {
+  return res?.ok && (res.type === "basic" || res.type === "default");
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
@@ -44,8 +57,10 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const fresh = await fetch(req);
-          const cache = await caches.open(CACHE);
-          cache.put(req, fresh.clone()).catch(() => {});
+          if (isCacheableResponse(fresh)) {
+            const cache = await caches.open(CACHE);
+            cache.put(req, fresh.clone()).catch(() => {});
+          }
           return fresh;
         } catch {
           return (
@@ -60,18 +75,14 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Same-origin static assets (JS, CSS, self-hosted fonts): cache-first.
-  if (url.origin === self.location.origin) {
+  if (url.origin === self.location.origin && isCacheableAsset(req, url)) {
     event.respondWith(
       (async () => {
         const cached = await caches.match(req);
         if (cached) return cached;
         try {
           const fresh = await fetch(req);
-          if (
-            fresh &&
-            fresh.status === 200 &&
-            (fresh.type === "basic" || fresh.type === "default")
-          ) {
+          if (isCacheableResponse(fresh)) {
             const cache = await caches.open(CACHE);
             cache.put(req, fresh.clone()).catch(() => {});
           }

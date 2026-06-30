@@ -12,11 +12,26 @@ Maximum ~22 words. One sentence only.
 
 Return only JSON: {"momentumLine": string}. No commentary, no markdown.`;
 
+type RecentPayload = { date?: string; signal?: string | null; summary?: string | null };
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return Object.prototype.toString.call(value) === "[object Object]";
+}
+
+function isRecentPayload(value: unknown): value is RecentPayload {
+  return (
+    isPlainObject(value) &&
+    (value.date == null || typeof value.date === "string") &&
+    (value.signal == null || typeof value.signal === "string") &&
+    (value.summary == null || typeof value.summary === "string")
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);
-    const recent: { date?: string; signal?: string | null; summary?: string | null }[] =
-      Array.isArray(body?.recent) ? body.recent : [];
+    const recentBody = body?.recent;
+    const recent: RecentPayload[] = Array.isArray(recentBody) ? recentBody : [];
     const missionDescription = body?.missionDescription?.toString().trim() || "";
     const daysRemaining = Number(body?.daysRemaining);
     const lastRawText = body?.lastRawText?.toString().trim() || "";
@@ -26,6 +41,10 @@ export async function POST(req: NextRequest) {
         { error: "no entries to build momentum from" },
         { status: 400 }
       );
+    }
+
+    if (!recent.every(isRecentPayload)) {
+      return Response.json({ error: "invalid recent entries" }, { status: 400 });
     }
 
     const lines = recent

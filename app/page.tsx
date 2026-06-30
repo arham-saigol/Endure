@@ -15,10 +15,10 @@ export default function Root() {
   );
 
   useEffect(() => {
-    if (isLoading || !user || q.isLoading) return;
+    if (isLoading || !user || q.isLoading || q.error) return;
     const has = !!(q.data?.missions?.length ?? 0);
     router.replace(has ? "/mission" : "/onboarding");
-  }, [isLoading, user, q.isLoading, q.data, router]);
+  }, [isLoading, user, q.isLoading, q.error, q.data, router]);
 
   if (isLoading || (user && q.isLoading)) {
     return (

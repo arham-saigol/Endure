@@ -28,7 +28,7 @@
   --gutter: 152px;
   --gutter-gap: clamp(28px, 4vw, 56px);
 
-  --serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --serif: var(--font-newsreader), georgia, "Times New Roman", serif;
   --sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --ease: cubic-bezier(0.2, 0.65, 0.3, 1);
@@ -909,6 +909,11 @@ a {
   color: var(--stone-faint);
   font-style: italic;
 }
+.write-area:focus-visible {
+  outline: 2px solid rgba(27, 24, 20, 0.55);
+  outline-offset: 8px;
+  border-radius: var(--radius-sm);
+}
 .write-foot {
   display: flex;
   align-items: center;
@@ -1030,7 +1035,7 @@ body {
 }
 
 .days-line {
-  font-family: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  font-family: var(--serif);
   font-weight: 700;
   font-size: clamp(3.3rem, 10vw, 7rem);
   line-height: 0.95;
@@ -1256,9 +1261,9 @@ body {
 /* ---------- motion fallback ---------- */
 
 .fade-in {
-  animation: fadeUp 0.6s var(--ease) both;
+  animation: fade-up 0.6s var(--ease) both;
 }
-@keyframes fadeUp {
+@keyframes fade-up {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
