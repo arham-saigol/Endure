@@ -54,7 +54,7 @@ export function AuthScreen() {
     <div className="auth">
       <motion.div className="auth-ornament" {...fade} transition={{ duration: 0.6, ease: EASE }} />
       <motion.h1 className="brand" {...fade} transition={{ duration: 0.6, ease: EASE, delay: 0.05 }}>
-        Endure<span className="dot">.</span>
+        Endure
       </motion.h1>
       <motion.p
         className="tagline"

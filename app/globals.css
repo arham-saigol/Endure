@@ -51,10 +51,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(1200px 620px at 50% -12%, rgba(255, 253, 247, 0.75), transparent 60%),
-    radial-gradient(900px 700px at 100% 100%, rgba(221, 211, 189, 0.4), transparent 55%),
-    var(--paper);
+  background: #f6eedb;
   color: var(--ink);
   font-family: var(--sans);
   font-size: 16px;
@@ -638,11 +635,11 @@ a {
 /* ---------- calendar ---------- */
 
 .cal-card {
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-lg);
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: 18px 14px 20px 16px;
   padding: clamp(18px, 2.6vw, 26px);
-  box-shadow: var(--shadow);
+  box-shadow: none;
 }
 .cal {
   display: flex;
@@ -730,9 +727,9 @@ a {
   aspect-ratio: 1 / 1;
   display: grid;
   place-items: center;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  background: transparent;
+  border-radius: 4px 3px 5px 3px;
+  border: 1.5px solid var(--ink);
+  background: #f6eedb;
   cursor: pointer;
   transition: background 0.2s var(--ease), border-color 0.2s var(--ease),
     transform 0.2s var(--ease);
@@ -925,6 +922,13 @@ a {
   color: var(--stone-faint);
   font-variant-numeric: tabular-nums;
 }
+.write-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 
 .analyzing {
   display: flex;
@@ -975,6 +979,278 @@ a {
   color: #7a2e12;
   font-size: 0.86rem;
   line-height: 1.5;
+}
+
+/* ---------- endure overhaul ---------- */
+
+:root {
+  --paper: #f6eedb;
+  --paper-warm: #f6eedb;
+  --surface: #f6eedb;
+  --surface-2: #fffdf6;
+  --recess: #eadfca;
+  --ink: #222326;
+  --ink-2: #222326;
+  --ink-soft: rgba(34, 35, 38, 0.72);
+  --stone: rgba(34, 35, 38, 0.68);
+  --stone-faint: rgba(34, 35, 38, 0.48);
+  --stone-ghost: rgba(34, 35, 38, 0.16);
+  --line: rgba(34, 35, 38, 0.22);
+  --line-soft: rgba(34, 35, 38, 0.12);
+  --line-strong: #222326;
+}
+
+body {
+  background: #f6eedb;
+  color: #222326;
+}
+
+.page {
+  padding-top: max(clamp(36px, 7vw, 72px), env(safe-area-inset-top));
+}
+
+.mission-page {
+  max-width: 900px;
+  align-items: center;
+  gap: clamp(42px, 7vw, 76px);
+}
+
+.mission-hero {
+  width: 100%;
+  min-height: clamp(240px, 42vh, 380px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mini-brand {
+  display: none;
+}
+
+.days-line {
+  font-family: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(3.3rem, 10vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  color: #222326;
+  text-wrap: balance;
+}
+
+.reading-wrap {
+  margin-top: 18px;
+  max-width: 36rem;
+}
+
+.reading-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(34, 35, 38, 0.46);
+}
+
+.todays-reading {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: clamp(1rem, 2.4vw, 1.14rem);
+  font-weight: 380;
+  line-height: 1.65;
+  color: rgba(34, 35, 38, 0.6);
+  text-wrap: pretty;
+}
+
+.todays-reading.placeholder {
+  font-style: italic;
+  color: rgba(34, 35, 38, 0.42);
+}
+
+.record-section {
+  width: 100%;
+}
+
+.record-panel {
+  position: relative;
+  width: 100%;
+  padding: clamp(20px, 4vw, 34px);
+  background: transparent;
+  border: 2px solid #222326;
+  border-radius: 18px 14px 20px 16px;
+  box-shadow: none;
+}
+
+.record-panel::before {
+  content: "";
+  position: absolute;
+  inset: 4px -3px -4px 3px;
+  border: 1.5px solid rgba(34, 35, 38, 0.76);
+  border-radius: 15px 19px 14px 21px;
+  pointer-events: none;
+}
+
+.record-title-wrap {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.record-title {
+  font-family: var(--serif);
+  font-weight: 420;
+  font-size: clamp(1.55rem, 4.2vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #222326;
+}
+
+.record-count {
+  margin-top: 5px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(34, 35, 38, 0.5);
+}
+
+.cal-card {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: 2px solid #222326;
+  border-radius: 18px 14px 20px 16px;
+  padding: clamp(16px, 3vw, 24px);
+  box-shadow: none;
+}
+
+.cal-card::before {
+  content: "";
+  position: absolute;
+  inset: 3px -3px -3px 3px;
+  border: 1.5px solid rgba(34, 35, 38, 0.72);
+  border-radius: 14px 18px 13px 20px;
+  pointer-events: none;
+}
+
+.cal {
+  gap: 20px;
+}
+
+.cal-head {
+  justify-content: center;
+  gap: 18px;
+  padding: 0;
+  text-align: center;
+}
+
+.cal-month-wrap {
+  align-items: center;
+}
+
+.cal-month {
+  font-family: var(--serif);
+  font-size: 1.32rem;
+  color: #222326;
+}
+
+.cal-year,
+.cal-dow {
+  color: rgba(34, 35, 38, 0.54);
+}
+
+.cal-nav {
+  position: absolute;
+  right: clamp(20px, 4vw, 34px);
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px 6px 9px 7px;
+  border: 1.5px solid #222326;
+  background: #fffdf6;
+  color: #222326;
+  box-shadow: none;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: #fffdf6;
+  color: #222326;
+  border-color: #222326;
+}
+
+.cal-grid {
+  gap: 7px;
+}
+
+.cal-dow {
+  padding-bottom: 4px;
+}
+
+.day {
+  border: 1.5px solid #222326;
+  border-radius: 4px 3px 5px 3px;
+  background: #f6eedb;
+  box-shadow: none;
+}
+
+.day:nth-child(3n) {
+  border-radius: 3px 5px 3px 4px;
+}
+
+.day:nth-child(4n) {
+  border-radius: 5px 3px 4px 3px;
+}
+
+.day .num {
+  font-size: 0.78rem;
+  font-weight: 620;
+  color: #222326;
+}
+
+.day.future .num,
+.day.past-open .num {
+  color: #222326;
+  opacity: 1;
+}
+
+.day:hover:not(.out):not(.future),
+.day.today {
+  background: #f6eedb;
+  border-color: #222326;
+}
+
+.day.filled .num {
+  color: #fff;
+}
+
+.node {
+  inset: 7px;
+  border-radius: 2px 3px 2px 4px;
+}
+
+.node.filled,
+.node.today-filled {
+  background: #222326;
+  box-shadow: none;
+  animation: none;
+}
+
+.node.today-filled {
+  outline: 1.5px solid #222326;
+  outline-offset: 2px;
+}
+
+.day .tip {
+  background: #222326;
+  color: #fffdf6;
+}
+
+.day .tip::after {
+  border-top-color: #222326;
 }
 
 /* ---------- motion fallback ---------- */

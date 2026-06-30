@@ -1,19 +1,38 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import { PWARegister } from "@/components/PWARegister";
 import "./globals.css";
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+const anthropicSerif = localFont({
+  src: [
+    {
+      path: "../fonts/AnthropicSerif-Romans-Variable-25x258.ttf",
+      style: "normal",
+      weight: "300 700",
+    },
+    {
+      path: "../fonts/AnthropicSerif-Italics-Variable-25x258.ttf",
+      style: "italic",
+      weight: "300 700",
+    },
+  ],
   variable: "--font-newsreader",
   display: "swap",
 });
 
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const anthropicSans = localFont({
+  src: [
+    {
+      path: "../fonts/AnthropicSans-Romans-Variable-25x258.ttf",
+      style: "normal",
+      weight: "300 800",
+    },
+    {
+      path: "../fonts/AnthropicSans-Italics-Variable-25x258.ttf",
+      style: "italic",
+      weight: "300 800",
+    },
+  ],
   variable: "--font-hanken",
   display: "swap",
 });
@@ -40,7 +59,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#e9e2d1",
+  themeColor: "#f6eedb",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -52,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${hanken.variable}`}>
+    <html lang="en" className={`${anthropicSerif.variable} ${anthropicSans.variable}`}>
       <body>
         <PWARegister />
         {children}

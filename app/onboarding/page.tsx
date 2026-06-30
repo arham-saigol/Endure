@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { id } from "@instantdb/react";
 import { db } from "@/lib/db";
 import { RequireAuth } from "@/components/RequireAuth";
-import { Header } from "@/components/Header";
 import { Reveal } from "@/components/Reveal";
 import { todayISO } from "@/lib/dates";
 
@@ -86,7 +85,6 @@ function Onboarding() {
 
   return (
     <div className="shell">
-      <Header />
       <main className="page">
         <Reveal as="section" className="section">
           <div className="marg">

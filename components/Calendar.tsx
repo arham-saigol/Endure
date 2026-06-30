@@ -143,6 +143,7 @@ export function Calendar({
                 const cls = ["day"];
                 let node: React.ReactNode = null;
                 if (has) {
+                  cls.push("filled");
                   const delay = ((parseISODate(c.iso).getDate() % 6) + 1) * 0.5;
                   node = (
                     <span
@@ -154,7 +155,6 @@ export function Calendar({
                   cls.push("today");
                 } else if (c.isPast) {
                   cls.push("past-open");
-                  node = <span className="node dot" />;
                 }
                 if (c.isFuture) cls.push("future");
 

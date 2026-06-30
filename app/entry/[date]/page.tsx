@@ -6,7 +6,6 @@ import Link from "next/link";
 import { id } from "@instantdb/react";
 import { db } from "@/lib/db";
 import { RequireAuth } from "@/components/RequireAuth";
-import { Header } from "@/components/Header";
 import { Reveal } from "@/components/Reveal";
 import { Disclosure } from "@/components/Disclosure";
 import { todayISO, formatLongDate } from "@/lib/dates";
@@ -130,7 +129,6 @@ function EntryInner() {
 
   return (
     <div className="shell">
-      <Header />
       <main className="page">
         <Reveal as="section" className="section">
           <div className="marg">
@@ -138,11 +136,13 @@ function EntryInner() {
             <span className="marg-meta">{formatLongDate(date)}</span>
           </div>
           <div className="body">
-            <div style={{ marginBottom: 24 }}>
-              <Link href="/mission" className="ghost-btn">
-                ← Back to the mission
-              </Link>
-            </div>
+            {!(phase === "compose" && !entry) && (
+              <div style={{ marginBottom: 24 }}>
+                <Link href="/mission" className="ghost-btn">
+                  ← Back to the mission
+                </Link>
+              </div>
+            )}
 
             {phase === "working" ? (
               <div className="detail">
@@ -157,9 +157,7 @@ function EntryInner() {
               <form className="entry" onSubmit={submit}>
                 <textarea
                   className="write-area"
-                  placeholder={
-                    "What happened today.\n\nWhat you did. What you felt. What you are struggling with. Anything at all — this is only for you."
-                  }
+                  placeholder="What happened today?"
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   autoFocus
@@ -168,9 +166,14 @@ function EntryInner() {
                   <span className="write-count">
                     {draft.trim() ? `${draft.trim().length} characters` : ""}
                   </span>
-                  <button className="btn" disabled={!draft.trim()}>
-                    {isToday ? "Record today" : "Record this day"}
-                  </button>
+                  <div className="write-actions">
+                    <Link href="/mission" className="ghost-btn">
+                      ← Back to the mission
+                    </Link>
+                    <button className="btn" disabled={!draft.trim()}>
+                      {isToday ? "Record today" : "Record this day"}
+                    </button>
+                  </div>
                 </div>
                 {error && <p className="err">{error}</p>}
               </form>

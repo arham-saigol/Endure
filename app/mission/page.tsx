@@ -4,11 +4,9 @@ import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/db";
 import { RequireAuth } from "@/components/RequireAuth";
-import { Header } from "@/components/Header";
 import { Calendar } from "@/components/Calendar";
 import { Reveal, MaskReveal } from "@/components/Reveal";
-import { Disclosure } from "@/components/Disclosure";
-import { todayISO, daysBetween, toISODate, formatLongDate } from "@/lib/dates";
+import { todayISO, daysBetween, toISODate } from "@/lib/dates";
 import { fetchMomentumLine } from "@/lib/ai";
 
 export default function MissionPage() {
@@ -109,114 +107,45 @@ function Mission() {
     : today;
   const daysNum = rawDays < 0 ? Math.abs(rawDays) : rawDays;
   const isDeadlineToday = rawDays === 0;
-  const daysLabel = isDeadlineToday
-    ? "the deadline is today"
-    : rawDays > 0
-    ? "days until the deadline"
-    : "days past the deadline";
+  const daysText = isDeadlineToday
+    ? "deadline today"
+    : `${daysNum} ${daysNum === 1 ? "day" : "days"} ${
+        rawDays > 0 ? "remaining" : "past deadline"
+      }`;
 
   const momentumText = hasEntries
     ? mission.momentumLine || "Reading the last few days…"
-    : "The archive begins with one entry.";
+    : "No reading yet.";
 
   return (
     <div className="shell">
-      <Header />
-      <main className="page">
-        <section className="section">
-          <div className="marg fade-in">
-            <span>Today</span>
-            <span className="marg-meta">{formatLongDate(today)}</span>
-          </div>
-          <div className="body">
-            <div className="days-block fade-in">
-              <div className="days-row">
-                {isDeadlineToday ? (
-                  <span
-                    className="days-num"
-                    style={{
-                      fontSize: "clamp(3rem, 11vw, 5.6rem)",
-                      lineHeight: 1,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    Today
-                  </span>
-                ) : (
-                  <span className="days-num">{daysNum}</span>
-                )}
-                <span className="days-label">{daysLabel}</span>
-              </div>
-            </div>
-
-            <div
-              className="momentum-card fade-in"
-              style={{ animationDelay: "0.12s" }}
-            >
-              <div className="momentum-eyebrow">
-                <span className="pulse" />
-                Today&apos;s reading
-              </div>
-              <MaskReveal key={momentumText} delay={0.28}>
-                <p
-                  className={
-                    mission.momentumLine && hasEntries
-                      ? "momentum"
-                      : "momentum placeholder"
-                  }
-                >
-                  {momentumText}
-                </p>
-              </MaskReveal>
-            </div>
+      <main className="page mission-page">
+        <section className="mission-hero fade-in">
+          <h1 className="days-line">{daysText}</h1>
+          <div className="reading-wrap">
+            <p className="reading-label">Today&apos;s Reading</p>
+            <MaskReveal key={momentumText} delay={0.22}>
+              <p
+                className={
+                  mission.momentumLine && hasEntries
+                    ? "todays-reading"
+                    : "todays-reading placeholder"
+                }
+              >
+                {momentumText}
+              </p>
+            </MaskReveal>
           </div>
         </section>
 
-        {mission.description && (
-          <Reveal as="section" className="section" delay={0.05}>
-            <div className="marg">
-              <span>Why</span>
+        <Reveal as="section" className="record-section" delay={0.05}>
+          <div className="record-panel">
+            <div className="record-title-wrap">
+              <h2 className="record-title">The record</h2>
+              <p className="record-count">
+                {entries.length} {entries.length === 1 ? "entry" : "entries"}
+              </p>
             </div>
-            <div className="body">
-              <Disclosure label="Why this matters">
-                {mission.description}
-              </Disclosure>
-            </div>
-          </Reveal>
-        )}
-
-        {!hasEntries && (
-          <Reveal as="section" className="section" delay={0.05}>
-            <div className="marg">
-              <span>Begin</span>
-            </div>
-            <div className="body">
-              <div className="empty">
-                <span className="e-mark">§</span>
-                <p className="e-title">No entries yet.</p>
-                <p className="e-body">
-                  The first proof is the hardest. Tonight, write a few honest
-                  lines about what happened today. That is enough to begin.
-                </p>
-                <button
-                  className="btn"
-                  onClick={() => router.push(`/entry/${today}`)}
-                >
-                  Record today
-                </button>
-              </div>
-            </div>
-          </Reveal>
-        )}
-
-        <Reveal as="section" className="section" delay={0.05}>
-          <div className="marg">
-            <span>The record</span>
-            <span className="marg-meta">
-              {entries.length} {entries.length === 1 ? "entry" : "entries"}
-            </span>
-          </div>
-          <div className="body">
             <Calendar
               key={mission.id}
               entries={entries}
@@ -224,20 +153,6 @@ function Mission() {
               createdAtISO={createdAtISO}
               onSelect={(iso) => router.push(`/entry/${iso}`)}
             />
-            <div className="cal-foot">
-              <span className="legend">
-                <span className="sw filled" />
-                <span>recorded</span>
-              </span>
-              <span className="legend">
-                <span className="sw ring" />
-                <span>today</span>
-              </span>
-              <span className="legend">
-                <span className="sw dot" />
-                <span>open</span>
-              </span>
-            </div>
           </div>
         </Reveal>
       </main>
