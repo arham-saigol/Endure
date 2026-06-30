@@ -8,7 +8,7 @@ regain momentum when you feel close to giving up.
 
 ## Stack
 
-- **Next.js 14** (App Router, TypeScript)
+- **Next.js 16** (App Router, TypeScript, Turbopack)
 - **InstantDB** for auth and data
 - **DeepSeek V4 Pro** (`deepseek-v4-pro`, max reasoning) for the daily signal,
   summary, and momentum line
